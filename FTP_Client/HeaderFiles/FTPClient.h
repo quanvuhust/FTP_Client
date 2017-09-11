@@ -1,38 +1,47 @@
 #ifndef FTPClient_H
 #define FTPClient_H
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include "Program.h"
+
 //#define NDEBUG
 
 #ifndef NDEBUG
-#define DEBUG_DESTRUCTOR cout << "Destructor." << endl;
-#define DEBUG_CONSTRUCTOR cout << "Constructor." << endl;
+#define DEBUG_DESTRUCTOR clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "Destructor." << endl;
+#define DEBUG_CONSTRUCTOR clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "Constructor." << endl;
 #else
 #define DEBUG_DESTRUCTOR
 #define DEBUG_CONSTRUCTOR
 #endif
 
 #define DEFAULT_BUFLEN 0x10240
+#define NUMBER_DIGIT_PORT 10
 
-class FTPClient
+
+class FTPClient: public Program
 {
 private:
-	SOCKET ConnectSocket;
-	struct addrinfo *result, *ptr, hints;
-	WSADATA wsaData;
-	int iResult;
-	char* IP_ADDRESS;
-	FILE *log;
+	SOCKET controlSocket, dataSocket;
+	char controlPort[NUMBER_DIGIT_PORT] = "21";
+	char dataPort[NUMBER_DIGIT_PORT];
+	char* ipADDRESS;
 public:
 	FTPClient(void);
 	~FTPClient(void);
-	void GetIPServer(char* IP_ADDRESS);
-	void Connect(void);
-	void Login(char* username, char* password);
+	int execute(int argc, char **argv);
+	void closeProgram(void);
+	void getIPServer(char* ipADDRESS);
+	void connectServer(char *port, char *ipServer, SOCKET &connectSocket);
+	void login(char* username, char* password);
+	void establishDataChanel(void);
 
-	friend void SendData(FTPClient *myFTPClient, char sendbuf[DEFAULT_BUFLEN]);
-	friend void ReceiveData(FTPClient *myFTPClient);
+	friend void sendCommand(FTPClient *myFTPClient, char* sendbuf);
+	friend int receiveResponse(FTPClient *myFTPClient, char* recvbuf);
 	
-	void CloseConnect(void);
+	void closeConnect(void);
 };
 
-#endif // !FTPClient_H
+#endif
