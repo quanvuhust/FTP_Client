@@ -24,10 +24,10 @@
 class FTPClient: public Program
 {
 private:
-	SOCKET controlSocket, dataSocket;
+	SOCKET controlSocket;
 	char controlPort[NUMBER_DIGIT_PORT] = "21";
-	char dataPort[NUMBER_DIGIT_PORT];
 	char* ipADDRESS;
+	enum TYPE_TRANSFER{ASCII, BINARY};
 public:
 	FTPClient(void);
 	~FTPClient(void);
@@ -36,12 +36,18 @@ public:
 	void getIPServer(char* ipADDRESS);
 	void connectServer(char *port, char *ipServer, SOCKET &connectSocket);
 	void login(char* username, char* password);
-	void establishDataChanel(void);
+	void establishDataChanel(SOCKET &dataSocket, char dataPort[]);
+	void setTransferMode(const int type);
+	void list(void);
+	void changeDirectory(char *newPath);
+	void printCurrentDirectory(void);
+	void download(char *destination, char *source);
+	void upload(char *destination, char *source);
 
 	friend void sendCommand(FTPClient *myFTPClient, char* sendbuf);
 	friend int receiveResponse(FTPClient *myFTPClient, char* recvbuf);
 	
-	void closeConnect(void);
+	void closeConnect(SOCKET socket);
 };
 
 #endif

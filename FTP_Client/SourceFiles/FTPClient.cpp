@@ -17,8 +17,6 @@ int FTPClient::execute(int argc, char **argv)
 {
 	SetConsoleTitle(NAME_FTPClient);
 
-	//FTPClient myFTPClient;
-
 	if (argc == 2) {
 		getIPServer(argv[1]);
 	}
@@ -29,16 +27,17 @@ int FTPClient::execute(int argc, char **argv)
 	char *recvbuf = new char[DEFAULT_BUFLEN];
 	receiveResponse(this, recvbuf);
 	delete[] recvbuf;
-	getchar();
-	system("cls");
 
 	login("quan", "");
-	closeConnect();
+	setTransferMode(BINARY);
+	download("C:\\Users\\Dell\\Downloads\\TestFTP\\VanPhong.rar", "\\VanPhong.rar");
+	getchar();
+	closeConnect(controlSocket);
 
 	return 0;
 }
 
-FTPClient::FTPClient(void) : controlSocket(INVALID_SOCKET), ipADDRESS("localhost"), dataSocket(INVALID_SOCKET)
+FTPClient::FTPClient(void) : controlSocket(INVALID_SOCKET), ipADDRESS("localhost")
 {
 	DEBUG_CONSTRUCTOR
 	WSADATA wsaData;
@@ -53,8 +52,7 @@ FTPClient::FTPClient(void) : controlSocket(INVALID_SOCKET), ipADDRESS("localhost
 FTPClient::~FTPClient(void)
 {
 	DEBUG_DESTRUCTOR
-	closesocket(controlSocket);
-	closesocket(dataSocket);
+	closeConnect(controlSocket);
 	WSACleanup();
 }
 
@@ -148,15 +146,13 @@ void FTPClient::login(char* username, char* password) {
 	delete[] userCommand;
 	delete[] passCommand;
 	delete[] recvbuf;
-	getchar();
 }
 
-void FTPClient::establishDataChanel(void)
+void FTPClient::establishDataChanel(SOCKET &dataSocket, char dataPort[])
 {
 	//Khởi tạo data chanel ở chế độ Passive mode
 	char *recvbuf = new char[DEFAULT_BUFLEN];
-	char parameter[5] = "PASV";
-	sendCommand(this, parameter);
+	sendCommand(this, "PASV");
 	int lenResponse = receiveResponse(this, recvbuf);//Thành công trả về mã 227
 
 	//Kiểm tra mã trả về
@@ -189,6 +185,118 @@ void FTPClient::establishDataChanel(void)
 	delete[] recvbuf;
 }
 
+void FTPClient::list(void) {
+	//Khởi tạo data chanel ở chế độ Passive mode
+	char *recvbuf = new char[DEFAULT_BUFLEN];
+	sendCommand(this, "MLSD");
+	int lenResponse = receiveResponse(this, recvbuf);
+
+	recvbuf[3] = '\0';
+	if (1) {
+		int first = 0, second = 0, i = 0;
+		recvbuf[lenResponse - 1] = '\0';
+	}
+	else {
+		clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "Cannot creat data chanel." << endl;
+	}
+	delete[] recvbuf;
+}
+
+void FTPClient::setTransferMode(const int type) {
+	int lenCommand = 8;
+	char *command = new char[lenCommand];
+	char *recvbuf = new char[DEFAULT_BUFLEN];
+	strcpy_s(command, lenCommand, "TYPE ");
+
+	if (type == ASCII) {
+		strcat_s(command, lenCommand, "A");
+	}
+	else if (type == BINARY) {
+		strcat_s(command, lenCommand, "I");
+	}
+
+	sendCommand(this, command);
+	receiveResponse(this, recvbuf);
+
+	printf("%s\n", &recvbuf[4]);
+	getchar();
+
+	delete[] recvbuf;
+}
+
+void FTPClient::changeDirectory(char *newPath) {
+	if (newPath[0] == '\0') {
+		return;
+	}
+	char *recvbuf = new char[DEFAULT_BUFLEN];
+	int lenCommand = 5 + strlen(newPath);
+	char *command = new char[lenCommand];
+	strcpy_s(command, lenCommand, "CWD ");
+	strcat_s(command, lenCommand, newPath);
+	sendCommand(this, command);
+	receiveResponse(this, recvbuf);
+	
+	recvbuf[3] = '\0';
+	if (strcmp(recvbuf, "250") == 0) {
+		printf("%s\n", &recvbuf[4]);
+		getchar();
+	}
+	else if (strcmp(recvbuf, "550") == 0){
+		printf("%s\n", &recvbuf[4]);
+		getchar();
+	}
+	delete[] recvbuf;
+	delete[] command;
+}
+
+void FTPClient::printCurrentDirectory(void) {
+	char *recvbuf = new char[DEFAULT_BUFLEN];
+
+	sendCommand(this, "PWD");
+	receiveResponse(this, recvbuf);
+
+	printf("%s\n", &recvbuf[4]);
+	getchar();
+	
+	delete[] recvbuf;
+}
+
+void FTPClient::download(char *destination, char *source)
+{
+	SOCKET dataSocket = INVALID_SOCKET;
+	char dataPort[NUMBER_DIGIT_PORT];
+	/*Thiết lập data chanel*/
+	establishDataChanel(dataSocket, dataPort);
+	/*Hàm này viết tạm, về sau sẽ cho hàm này hoạt động trên 1 Thread riêng*/
+	if (dataSocket != INVALID_SOCKET) {
+		char *recvbuf = new char[DEFAULT_BUFLEN];
+		int lenCommand = 6 + strlen(source);
+		char *command = new char[lenCommand];
+		strcpy_s(command, lenCommand, "RETR ");
+		strcat_s(command, lenCommand, source);
+		sendCommand(this, command);
+		receiveResponse(this, recvbuf);
+		FILE *fileDownload = nullptr;
+		fopen_s(&fileDownload, destination, "w+b");
+
+		int iResult = 1;
+
+		while (iResult > 0) {
+			iResult = recv(dataSocket, recvbuf, DEFAULT_BUFLEN, 0);
+			fwrite(recvbuf, iResult, 1, fileDownload);
+		}
+
+		fclose(fileDownload);
+
+		closeConnect(dataSocket);
+	}
+}
+
+void FTPClient::upload(char *destination, char *source)
+{
+
+}
+
 void sendCommand(FTPClient *myFTPClient, char* sendbuf)
 {
 	int result = send(myFTPClient->controlSocket, sendbuf, (int)strlen(sendbuf) + 1, 0);
@@ -218,16 +326,10 @@ int receiveResponse(FTPClient *myFTPClient, char *recvbuf)
 	return iResult;
 }
 
-void FTPClient::closeConnect(void)
+void FTPClient::closeConnect(SOCKET socket)
 {
-	int iResult = shutdown(controlSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "shutdown failed with error: " << WSAGetLastError() << endl;
-		closeProgram();
-	}
-
-	if (dataSocket != INVALID_SOCKET) {
-		iResult = shutdown(dataSocket, SD_SEND);
+	if (socket != INVALID_SOCKET) {
+		int iResult = shutdown(socket, SD_SEND);
 		if (iResult == SOCKET_ERROR) {
 			clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "shutdown failed with error: " << WSAGetLastError() << endl;
 			closeProgram();
