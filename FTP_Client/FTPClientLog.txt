@@ -1,0 +1,21 @@
+-> Line 41 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+Constructor.
+-> Line 413 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+220-FileZilla Server 0.9.60 beta
+220-written by Tim Kosse (tim.kosse@filezilla-project.org)
+220 Please visit https://filezilla-project.org/
+
+-> Line 140 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+YES
+-> Line 413 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+331 Password required for quan
+
+-> Line 413 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+230 Logged on
+
+-> Line 413 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+213 8981640
+
+-> Line 413 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpclient.cpp: 
+227 Entering Passive Mode (127,0,0,1,239,140)
+

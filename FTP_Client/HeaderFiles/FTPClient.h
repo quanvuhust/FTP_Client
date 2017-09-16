@@ -20,6 +20,18 @@
 #define DEFAULT_BUFLEN 0x10240
 #define NUMBER_DIGIT_PORT 10
 
+class DownloadInformation {
+public:
+	char *destination;
+	int start;
+	int numberBlocks;
+	SOCKET dataSocket;
+	class FTPClient *client;
+
+	DownloadInformation(char *destination, int start, int numberBlocks, SOCKET dataSocket, class FTPClient *client) : destination(destination),
+		start(start), numberBlocks(numberBlocks), dataSocket(dataSocket), client(client) {}
+};
+
 
 class FTPClient: public Program
 {
@@ -28,7 +40,9 @@ private:
 	char controlPort[NUMBER_DIGIT_PORT] = "21";
 	char* ipADDRESS;
 	enum TYPE_TRANSFER{ASCII, BINARY};
+	HANDLE mutex;
 public:
+	static const int BLOCK_SIZE = 32;
 	FTPClient(void);
 	~FTPClient(void);
 	int execute(int argc, char **argv);
@@ -41,11 +55,15 @@ public:
 	void list(void);
 	void changeDirectory(char *newPath);
 	void printCurrentDirectory(void);
-	void download(char *destination, char *source);
+	long getFileSize(char *fileName);
+	void download(char *destination, char *source, const int numberThread);
 	void upload(char *destination, char *source);
 
-	friend void sendCommand(FTPClient *myFTPClient, char* sendbuf);
-	friend int receiveResponse(FTPClient *myFTPClient, char* recvbuf);
+	void sendCommand(char* sendbuf);
+	int receiveResponse(char* recvbuf);
+	int sendAndReceive(char *sendbuf, char *recvbuf);
+	void downloadSegment(HANDLE *h, DownloadInformation **inf, int index, char *source);
+	friend void downloadThread(const DownloadInformation * const inf);
 	
 	void closeConnect(SOCKET socket);
 };
