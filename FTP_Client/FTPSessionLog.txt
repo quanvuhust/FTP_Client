@@ -1,0 +1,18 @@
+-> Line 8 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\clientsocket.cpp: 
+Constructor.
+Connecting to  localhost: 21
+-> Line 57 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\userpi.cpp: 
+Server response: 220-FileZilla Server 0.9.60 beta
+220-written by Tim Kosse (tim.kosse@filezilla-project.org)
+220 Please visit https://filezilla-project.org/
+
+-> Line 38 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\ftpsession.cpp: 
+YES
+-> Line 57 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\userpi.cpp: 
+Server response: 331 Password required for quan
+
+-> Line 57 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\userpi.cpp: 
+Server response: 230 Logged on
+
+-> Line 8 in file c:\users\dell\source\repos\ftp_client\ftp_client\sourcefiles\clientsocket.cpp: 
+Constructor.

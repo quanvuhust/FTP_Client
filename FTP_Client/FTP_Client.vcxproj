@@ -19,13 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HeaderFiles\FTPClient.h" />
-    <ClInclude Include="HeaderFiles\Program.h" />
+    <ClCompile Include="SourceFiles\ClientSocket.cpp" />
+    <ClCompile Include="SourceFiles\FTPSession.cpp" />
+    <ClCompile Include="SourceFiles\Main.cpp" />
+    <ClCompile Include="SourceFiles\UserDTP.cpp" />
+    <ClCompile Include="SourceFiles\UserPI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SourceFiles\FTPClient.cpp" />
-    <ClCompile Include="SourceFiles\Main.cpp" />
-    <ClCompile Include="SourceFiles\Program.cpp" />
+    <ClInclude Include="SourceFiles\ClientSocket.h" />
+    <ClInclude Include="SourceFiles\FTPSession.h" />
+    <ClInclude Include="SourceFiles\UserDTP.h" />
+    <ClInclude Include="SourceFiles\UserPI.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
