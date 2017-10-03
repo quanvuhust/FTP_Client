@@ -18,22 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="SourceFiles\ClientSocket.cpp" />
-    <ClCompile Include="SourceFiles\FTPSession.cpp" />
-    <ClCompile Include="SourceFiles\Main.cpp" />
-    <ClCompile Include="SourceFiles\UserDTP.cpp" />
-    <ClCompile Include="SourceFiles\UserPI.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="SourceFiles\ClientSocket.h" />
-    <ClInclude Include="SourceFiles\FTPSession.h" />
-    <ClInclude Include="SourceFiles\UserDTP.h" />
-    <ClInclude Include="SourceFiles\UserPI.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{CBC0326A-7C67-4EE8-A93E-3D7FA3588AEA}</ProjectGuid>
+    <ProjectGuid>{FC1D8241-C17A-4E53-8E94-C078131EF923}</ProjectGuid>
     <RootNamespace>FTP_Client</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -123,6 +110,13 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\FTPClientProgram.cpp" />
+    <ClCompile Include="Sources\SessionTable.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\SessionTable.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
