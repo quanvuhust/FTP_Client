@@ -1,18 +1,35 @@
 #include "SessionTable.h"
 #include <cstdio>
 #include <psapi.h>
+#include <iostream>
+
+bool SessionTable::checkTerminatedProcess(int id)
+{
+	LPDWORD lpExitCode = NULL;
+	GetExitCodeProcess(prtable[id].hProcess, lpExitCode);
+
+	if (*lpExitCode == STILL_ACTIVE) {
+		return false;
+	}
+
+	return true;
+}
+
 
 bool SessionTable::createSession(char* arguments, char* serverIP)
 {
 	time_t rawtime;
-	struct tm * timeinfo;
+	struct tm * timeinfo = nullptr;
 
 	time (&rawtime);
-	timeinfo = localtime (&rawtime);
+	localtime_s(timeinfo, &rawtime);
 
 	SessionInfo sessInf;
-	sessInf.startTime.assign(asctime(timeinfo));
-	sessInf.serverIP.assign(asctime(serverIP));
+	char startTime[100];
+	asctime_s(startTime, 100, timeinfo);
+	sessInf.startTime.assign(startTime);
+	
+	sessInf.serverIP.assign(serverIP);
 
 	PROCESS_INFORMATION pi;
 	STARTUPINFO si;
@@ -25,22 +42,26 @@ bool SessionTable::createSession(char* arguments, char* serverIP)
 	}
 
 	prtable.push_back(pi);
-	inf.push_back(sessInf)
+	inf.push_back(sessInf);
 	nSession++;
 	return true;
 }
 
 void SessionTable::listSession(void)
 {
-	if (prtable.nSession == 0) {
+	if (nSession == 0) {
 		printf("Don't have any session.\n");
 		return;
 	}
 
-	for (int i = 0; i < prtable.nSession; i++) {
-		cout << i << ": ";
-		cout << "IP: " << inf[i].serverIP;
-		cout << ". Start: " << inf[i].startTime << endl;
+	for (int i = 0; i < nSession; i++) {
+		if (!checkTerminatedProcess(i)) {
+			cout << i << ": ";
+			cout << "IP: " << inf[i].serverIP;
+			cout << ". Start: " << inf[i].startTime << endl;
+		} else {
+			closeSession(i);
+		}
 	}
 }
 

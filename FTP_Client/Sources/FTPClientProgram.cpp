@@ -1,4 +1,4 @@
-﻿#include "SessionTable.h"
+#include "SessionTable.h"
 
 #include <cstdio>
 #include <iostream>
@@ -19,9 +19,9 @@ bool inputCommand(int &command, int start, int end) {
 	string input(buffer);
 
 	if (regex_match(input, correctFunction)) {
-		mode = atoi(input.c_str());
-		cout << mode << endl;
-		if (mode >= start && mode <= end) {
+		command = std::stoi(input);
+		
+		if (command >= start && command <= end) {
 			return true;
 		}
 
@@ -30,7 +30,7 @@ bool inputCommand(int &command, int start, int end) {
 	return false;
 }
 
-bool creatSession(string ID, SessionTable *sessTable) {
+bool createSession(int ID, SessionTable *sessTable) {
 	string nameProgram;
 	nameProgram.assign("");
 
@@ -44,23 +44,26 @@ bool creatSession(string ID, SessionTable *sessTable) {
 	if (username == "") {
 		username.assign("anonymous");
 	}
-	cout << "Password: " << end;
+	cout << "Password: " << endl;
 	cin >> password;
-	string arguments = nameProgram + " " + ID + " " + serverIP + " " + username + " " + password;
-
-	sessTable->creatSession(arguments.c_str(), serverIP.c_str());
+	string arguments = nameProgram + " " + std::to_string(ID) + " " + serverIP + " " + username + " " + password;
+	char cArguments[1000], cServerIP[100];
+	strcpy_s(cArguments, 1000, arguments.c_str());
+	strcpy_s(cServerIP, 100, serverIP.c_str());
+	sessTable->createSession(cArguments, cServerIP);
+	return true;
 }
 
 int main(int argc, char** argv) {
 	SetConsoleTitle(NAME_CLIENT);
 	system("chcp 65001");
-	system("cls");
+	//system("cls");
 	FILE *log = nullptr;
 	freopen_s(&log, "FTPClientProgramLog.txt", "w+t", stderr);
 	int command = 0;
 	bool flag = true;
 
-	SessionTable *sessTable = new sessTable();
+	SessionTable *sessTable = new SessionTable();
 	do {
 		while (1) {
 			cout << "1. Tạo 1 phiên làm việc với Server." << endl;
@@ -68,7 +71,7 @@ int main(int argc, char** argv) {
 			cout << "3. Hủy phiên làm việc." << endl;
 			cout << "4. Kết thúc chương trình." << endl;
 
-			if (inputCommand(command, 1, 3)) {
+			if (inputCommand(command, 1, 4)) {
 				break;
 			}
 
@@ -78,8 +81,8 @@ int main(int argc, char** argv) {
 
 		switch (command) {
 		case 1: {
-			creatSession(sessTable->getNumberSess, sessTable);
-			cout << "Session " << sessTable->getNumberSess - 1 << " đã được tạo thành công." << endl;
+			createSession(sessTable->getNumberSession(), sessTable);
+			cout << "Session " << sessTable->getNumberSession() - 1 << " đã được tạo thành công." << endl;
 			break;
 		}
 		case 2: {
@@ -96,7 +99,7 @@ int main(int argc, char** argv) {
 				sessTable->closeAllSession();
 				cout << "Tất cả session đã kết thúc thành công." << endl;
 			} else {
-				sessTable->closeSession(id);
+				sessTable->closeSession(std::stoi(id));
 				cout << "Session " << id <<" đã kết thúc thành công." << endl;
 			}
 			break;
