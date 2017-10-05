@@ -22,6 +22,7 @@ private:
 	int nSession = 0;
 	bool checkTerminatedProcess(int id);
 public:
+	bool isEmpty(void);
 	bool createSession(char* arguments, char* serverIP);
 	void listSession(void);
 	void closeSession(int id);

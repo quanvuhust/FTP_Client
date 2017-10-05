@@ -19,7 +19,7 @@ bool SessionTable::checkTerminatedProcess(int id)
 bool SessionTable::createSession(char* arguments, char* serverIP)
 {
 	time_t rawtime;
-	struct tm * timeinfo = nullptr;
+	struct tm * timeinfo = new struct tm;
 
 	time (&rawtime);
 	localtime_s(timeinfo, &rawtime);
@@ -27,8 +27,9 @@ bool SessionTable::createSession(char* arguments, char* serverIP)
 	SessionInfo sessInf;
 	char startTime[100];
 	asctime_s(startTime, 100, timeinfo);
+	delete timeinfo;
+
 	sessInf.startTime.assign(startTime);
-	
 	sessInf.serverIP.assign(serverIP);
 
 	PROCESS_INFORMATION pi;
@@ -44,13 +45,20 @@ bool SessionTable::createSession(char* arguments, char* serverIP)
 	prtable.push_back(pi);
 	inf.push_back(sessInf);
 	nSession++;
+	
 	return true;
 }
 
+bool SessionTable::isEmpty(void)
+{
+	return nSession == 0;
+}
+
+
 void SessionTable::listSession(void)
 {
-	if (nSession == 0) {
-		printf("Don't have any session.\n");
+	if (isEmpty()) {
+		printf("Khong co bat ky phien nao dang hoat dong.\n");
 		return;
 	}
 
@@ -67,6 +75,10 @@ void SessionTable::listSession(void)
 
 void SessionTable::closeSession(int id)
 {
+	if (isEmpty()) {
+		return;
+	}
+
 	if (id >= 0 && id < nSession) {
 		TerminateProcess(prtable[id].hProcess, 0);
 		CloseHandle(prtable[id].hThread);
@@ -74,11 +86,15 @@ void SessionTable::closeSession(int id)
 		prtable.erase(prtable.begin() + id);
 		inf.erase(inf.begin() + id);
 	} else {
-		printf("Invalid session ID.\n");
+		printf("Khong ton tai id.\n");
 	}
 }
 
 void SessionTable::closeAllSession(void) {
+	if (isEmpty()) {
+		return;
+	}
+
 	for (auto pi : prtable) {
 		TerminateProcess(pi.hProcess, 0);
 		CloseHandle(pi.hThread);

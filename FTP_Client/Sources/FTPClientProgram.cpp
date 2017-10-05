@@ -32,20 +32,20 @@ bool inputCommand(int &command, int start, int end) {
 
 bool createSession(int ID, SessionTable *sessTable) {
 	string nameProgram;
-	nameProgram.assign("");
+	nameProgram.assign("FTP_Session.exe");
 
 	string username;
 	string password;
 	string serverIP;
-	cout << "Server IP = " << endl;
+	cout << "Server IP = ";
 	cin >> serverIP;
-	cout << "User name (gõ \"enter\" để đăng nhập chế độ anonymous user): " << endl;
-	cin >> username;
+	cout << "User name (go \"enter\" de dang nhap che do anonymous user): ";
+	getline(cin, username);
 	if (username == "") {
 		username.assign("anonymous");
 	}
-	cout << "Password: " << endl;
-	cin >> password;
+	cout << "Password: ";
+	getline(cin, password);
 	string arguments = nameProgram + " " + std::to_string(ID) + " " + serverIP + " " + username + " " + password;
 	char cArguments[1000], cServerIP[100];
 	strcpy_s(cArguments, 1000, arguments.c_str());
@@ -57,7 +57,7 @@ bool createSession(int ID, SessionTable *sessTable) {
 int main(int argc, char** argv) {
 	SetConsoleTitle(NAME_CLIENT);
 	system("chcp 65001");
-	//system("cls");
+	
 	FILE *log = nullptr;
 	freopen_s(&log, "FTPClientProgramLog.txt", "w+t", stderr);
 	int command = 0;
@@ -66,56 +66,64 @@ int main(int argc, char** argv) {
 	SessionTable *sessTable = new SessionTable();
 	do {
 		while (1) {
-			cout << "1. Tạo 1 phiên làm việc với Server." << endl;
-			cout << "2. Xem danh sách các phiên làm việc với Server." << endl;
-			cout << "3. Hủy phiên làm việc." << endl;
-			cout << "4. Kết thúc chương trình." << endl;
+			system("cls");
+			cout << "1. Tao mot phien lam viec voi Server." << endl;
+			cout << "2. Xem danh sach cac phien lam viec." << endl;
+			cout << "3. Huy phien lam viec." << endl;
+			cout << "4. Dong chuong trinh." << endl;
 
 			if (inputCommand(command, 1, 4)) {
 				break;
 			}
 
 			system("cls");
-			cout << "Không có chức năng này. Bạn vui lòng nhập lại" << endl;
+			cout << "Khong co chuc nang nay. Ban vui long nhap lai: " << endl;
+			system("pause");
 		}
 
 		switch (command) {
 		case 1: {
 			createSession(sessTable->getNumberSession(), sessTable);
-			cout << "Session " << sessTable->getNumberSession() - 1 << " đã được tạo thành công." << endl;
+			cout << "Session " << sessTable->getNumberSession() - 1 << " da duoc tao thanh cong." << endl;
 			break;
 		}
 		case 2: {
 			sessTable->listSession();
-			cout << "Nhập 1 phím bất kỳ để tiếp tục." << endl;
 			system("pause");
 			break;
 		}
 		case 3: {
+			if (sessTable->isEmpty()) {
+				cout << "Khong co bat ky phien nao dang hoat dong." << endl;
+				system("pause");
+				break;
+			}
+
 			string id;
-			cout << "Nhập số ID của phiên cần kết thúc (all: Để kết thúc tất cả session).";
+			cout << "Nhap so id cua phien can dong (all: De dong tat ca phien dang lam viec).";
 			cin >> id;
 			if(id == "all") {
 				sessTable->closeAllSession();
-				cout << "Tất cả session đã kết thúc thành công." << endl;
+				cout << "Tat ca phien da duoc dong thanh cong." << endl;
 			} else {
 				sessTable->closeSession(std::stoi(id));
-				cout << "Session " << id <<" đã kết thúc thành công." << endl;
+				cout << "Phien " << id <<" da dong thanh cong." << endl;
 			}
 			break;
 		}
 		case 4: {
 			do {
 				string option;
-				cout << "Bạn có muốn kết thúc chương trình (Y/N): ";
+				cout << "Ban co muon ket thuc chuong trinh (Y/N): ";
 				cin >> option;
 				if (option == "y" || option == "Y") {
 					flag = false;
 					break;
 				} else if (option == "n" || option == "N") {
+					getchar();
 					break;
 				}
-				cout << "Không có lệnh." << endl;
+				cout << "Khong co lenh." << endl;
 			} while(1);
 		}
 		}
