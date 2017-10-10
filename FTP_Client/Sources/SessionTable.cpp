@@ -5,10 +5,10 @@
 
 bool SessionTable::checkTerminatedProcess(int id)
 {
-	LPDWORD lpExitCode = NULL;
-	GetExitCodeProcess(prtable[id].hProcess, lpExitCode);
+	DWORD exitCode = 0;
+	GetExitCodeProcess(prtable[id].hProcess, &exitCode);
 
-	if (*lpExitCode == STILL_ACTIVE) {
+	if (exitCode == STILL_ACTIVE) {
 		return false;
 	}
 
@@ -37,7 +37,7 @@ bool SessionTable::createSession(char* arguments, char* serverIP)
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
 
-	if (CreateProcess(NULL, arguments, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
+	if (!CreateProcess(NULL, arguments, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
 		printf("Create process failed");
 		return false;
 	}
@@ -62,14 +62,11 @@ void SessionTable::listSession(void)
 		return;
 	}
 
+	cout << "Danh sach cac phien dang hoat dong." << endl;
 	for (int i = 0; i < nSession; i++) {
-		if (!checkTerminatedProcess(i)) {
-			cout << i << ": ";
-			cout << "IP: " << inf[i].serverIP;
-			cout << ". Start: " << inf[i].startTime << endl;
-		} else {
-			closeSession(i);
-		}
+		cout << i << ". ";
+		cout << "IP: " << inf[i].serverIP;
+		cout << ". Start: " << inf[i].startTime << endl;
 	}
 }
 
@@ -85,6 +82,7 @@ void SessionTable::closeSession(int id)
 		CloseHandle(prtable[id].hProcess);
 		prtable.erase(prtable.begin() + id);
 		inf.erase(inf.begin() + id);
+		nSession--;
 	} else {
 		printf("Khong ton tai id.\n");
 	}
@@ -103,6 +101,7 @@ void SessionTable::closeAllSession(void) {
 
 	prtable.clear();
 	inf.clear();
+	nSession = 0;
 }
 
 int SessionTable::getNumberSession(void) {

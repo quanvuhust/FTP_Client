@@ -4,6 +4,7 @@
 #include "UserPI.h"
 #include "UserDTP.h"
 
+
 class FTPSession
 {
 private:
@@ -25,10 +26,10 @@ public:
 
 	bool creatControlChanel(UserPI *pUserPI);
 	void establishDataChanel(UserPI *pUserPI, char dataPort[]);
-	bool download(char *destination, char *source, ThreadInf *inf);
-	bool download(char *destination, char *source, int startOffset, int size, ThreadInf *inf);
-	bool restart(const ThreadInf inf);
-	bool upload(char *destination, char *source, ThreadInf *inf);
+	bool download(char *destination, char *source, ThreadInfo *inf);
+	bool download(char *destination, char *source, int startOffset, int size, ThreadInfo *inf);
+	bool restart(const ThreadInfo inf);
+	bool upload(char *destination, char *source, ThreadInfo *inf);
 };
 
 #endif

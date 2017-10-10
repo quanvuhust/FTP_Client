@@ -17,7 +17,18 @@ Server response: 230 Logged on
 -> Line 49 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
 257 "/" is current directory.
 
--> Line 25 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
-Destructor.
--> Line 113 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\clientsocket.cpp: 
-shutdown failed with error: 10093
+-> Line 49 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+227 Entering Passive Mode (127,0,0,1,231,244)
+
+-> Line 8 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\clientsocket.cpp: 
+Constructor.
+Connecting to  localhost: 59380
+-> Line 57 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 200 Type set to I
+
+-> Line 57 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 150 Opening data channel for directory listing of "/"
+
+-> Line 49 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+226 Successfully transferred "/"
+

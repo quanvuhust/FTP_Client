@@ -113,12 +113,14 @@
   <ItemGroup>
     <ClCompile Include="Sources\ClientSocket.cpp" />
     <ClCompile Include="Sources\FTPSession.cpp" />
+    <ClCompile Include="Sources\FTPSessionProgram.cpp" />
     <ClCompile Include="Sources\UserDTP.cpp" />
     <ClCompile Include="Sources\UserPI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\ClientSocket.h" />
     <ClInclude Include="Sources\FTPSession.h" />
+    <ClInclude Include="Sources\FTPSessionProgram.h" />
     <ClInclude Include="Sources\UserDTP.h" />
     <ClInclude Include="Sources\UserPI.h" />
   </ItemGroup>

@@ -17,7 +17,9 @@ Server response: 230 Logged on
 -> Line 49 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
 257 "/" is current directory.
 
--> Line 25 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
-Destructor.
--> Line 113 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\clientsocket.cpp: 
-shutdown failed with error: 10093
+-> Line 49 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+213 8981640
+
+-> Line 49 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+257 "/" is current directory.
+

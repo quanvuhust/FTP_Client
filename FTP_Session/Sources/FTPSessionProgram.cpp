@@ -1,13 +1,14 @@
-#include "FTPClient.h"
+#include "FTPSessionProgram.h"
+#include "FTPSession.h"
 #include <iostream>
 #include <cstdio>
 
 using namespace std;
 
-#define SESSION_ID argv[2]
-#define SERVER_IP argv[3]
-#define USERNAME argv[4]
-#define PASSWORD argv[5]
+#define SESSION_ID argv[1]
+#define SERVER_IP argv[2]
+#define USERNAME argv[3]
+#define PASSWORD argv[4]
 
 FTPSession *gSession;
 
@@ -28,7 +29,7 @@ void help(int argc)
 
 void normalizeStr(char *str)
 {
-	int i, len = strlen(str), position;
+	int i, position, len = (int)strlen(str);
 
 	/*Xoa khoang trong cuoi xau*/
 	for (i = len - 1; isspace(str[i]); i--);
@@ -64,7 +65,8 @@ void normalizeStr(char *str)
 
 void parseCommand(int *pArgc, char ***pArgv, char *input)
 {
-	int countSpace = 0, len = strlen(input);
+	int countSpace = 0;
+	size_t len = strlen(input);
 	char *p, *str = input;
 
 	input[len] = SPACE;
@@ -97,7 +99,8 @@ void parseCommand(int *pArgc, char ***pArgv, char *input)
 
 void tolowerStr(char *str)
 {
-	int len = strlen(str), i;
+	size_t len = strlen(str);
+	int i;
 
 	for (i = 0; i < len; i++)
 	{
@@ -110,7 +113,16 @@ void tolowerStr(char *str)
 
 void threadDownload(ThreadInfo *inf)
 {
-	gSession->download(inf->destination.c_str(), inf->destination.c_str(), inf);
+	size_t lenDes = inf->destination.length(), lenSour = inf->source.length();
+
+	char *destination = new char[lenDes + 1];
+	strcpy_s(destination, lenDes + 1, inf->destination.c_str());
+	char *source = new char[lenSour + 1];
+	strcpy_s(source, lenSour + 1, inf->source.c_str());
+
+	gSession->download(destination, source, inf);
+	delete[] destination;
+	delete[] source;
 }
 
 int main(int argc, char **argv)
@@ -120,65 +132,93 @@ int main(int argc, char **argv)
 	system("cls");
 	FILE *log = nullptr;
 	char fileName[19];
-	strcpy_s(fileName, 18, "FTPSession");
-	strcat_s(fileName, 18, SESSION_ID);
-	strcat_s(fileName, 18, "Log.txt");
+
+	strcpy_s(fileName, 19, "FTPSession");
+	strcat_s(fileName, 19, SESSION_ID);
+	strcat_s(fileName, 19, "Log.txt");
 	freopen_s(&log, fileName, "w+t", stderr);
 	char input[MAX_PATH + 2];
-
-	gSession = new FTPSession(SERVER_IP, USERNAME, PASSWORD);
-	ThreadTable *thrTable = new ThreadTable(gSession); 
-
+	
+	if (argc > 4) {
+		gSession = new FTPSession(SERVER_IP, USERNAME, PASSWORD);
+	}
+	else {
+		gSession = new FTPSession(SERVER_IP, USERNAME, "");
+	}
+	
+	ThreadTable *thrTable = new ThreadTable(); 
+	system("cls");
 	while (1)
 	{
 		gSession->printCurrentDirectory();
 		cout << ">";
 		cin.sync();
 		cin.getline(input, MAX_PATH + 2, '\n');
-		if (input[0] == "\0") {
+		if (input[0] == '\0') {
 			continue;
 		}
-		normalizeStr(input);
+		
+		normalizeStr(input);	
 		parseCommand(&argc, &argv, input);
 		tolowerStr(argv[0]);
-	}
-
-	if(strcmp(argv[0], "cd") == 0) {
-		if(argc == 2){
-			gSession->changeDirectory(argv[1]);
-		} else {
-			cout << "Tham số không đúng." << endl;
+		
+		if (strcmp(argv[0], "cd") == 0) {
+			if (argc == 2) {
+				gSession->changeDirectory(argv[1]);
+			}
+			else {
+				cout << "Invalid arguments." << endl;
+			}
 		}
-	} else if (strcmp(argv[0], "ls") == 0) {
-		if(argc == 1){
-			gSession->list();
-		} else {
-			cout << "Tham số không đúng." << endl;
+		else if (strcmp(argv[0], "ls") == 0) {
+			if (argc == 1) {
+				gSession->list();
+			}
+			else {
+				cout << "Invalid arguments." << endl;
+			}
 		}
-	} else if (strcmp(argv[0], "size") == 0) {
-		if(argc == 2){
-			gSession->size(argv[1]);
-		} else {
-			cout << "Tham số không đúng." << endl;
+		else if (strcmp(argv[0], "size") == 0) {
+			if (argc == 2) {
+				gSession->getFileSize(argv[1]);
+			}
+			else {
+				cout << "Invalid arguments." << endl;
+			}
 		}
-	} else if (strcmp(argv[0], "download") == 0) {
-		if(argc == 3){
-			DWORD threadId;
-			int id = thrTable.getSize();
+		else if (strcmp(argv[0], "download") == 0) {
+			if (argc == 3) {
+				DWORD threadId;
+				int id = thrTable->getSize();
 
-			ThreadInfo inf;
-			inf.id = id;
-			inf.totalSize = gSession->size(argv[1]);;
-			inf.source.assign(argv[1]);	// argv[1] là đường dẫn file nguồn trên máy server
-			inf.destination.assign(argv[2]); // argv[2] là đường dẫn file đích trên máy client
+				ThreadInfo inf;
+				inf.id = id;
+				inf.totalSize = gSession->getFileSize(argv[1]);
+				inf.source.assign(argv[1]);	// argv[1] là đường dẫn file nguồn trên máy server
+				inf.destination.assign(argv[2]); // argv[2] là đường dẫn file đích trên máy client
 
-			thrTable.addThreadInfo(inf);
-			thrTable.addThread(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadDownload, &thrTable->getThreadInfo(id), 0, &threadId));
+				thrTable->addThreadInfo(inf);
+				thrTable->addThread(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadDownload, &thrTable->getThreadInfo(id), 0, &threadId));
+			}
+			else {
+				cout << "Invalid arguments." << endl;
+			}
+		}
+		else if (strcmp(argv[0], "exit") == 0) {
+			if (argc == 1) {
+				break;
+			}
+			else {
+				cout << "Invalid arguments." << endl;
+			}
+		}
+		else {
+			cout << "\'" << argv[0] << "\'" << "is not recognized as an internal or external command, operable program or batch file." << endl;
 		}
 	}
 	
-	for(char *str: argv) {
-		delete[] str;
+	for (int i = 0; i < argc; i++) {
+		delete[] argv[i];
 	}
 
 	delete thrTable;
@@ -186,4 +226,42 @@ int main(int argc, char **argv)
 	delete gSession;
 	fclose(log);
 	return 0;
+}
+
+
+ThreadTable::ThreadTable()
+{
+
+}
+
+bool ThreadTable::addThreadInfo(ThreadInfo inf)
+{
+	iTable.push_back(inf);
+	return true;
+}
+
+bool ThreadTable::addThread(HANDLE h)
+{
+	hTable.push_back(h);
+	return true;
+}
+
+int ThreadTable::getSize(void)
+{
+	return hTable.size();
+}
+
+ThreadInfo& ThreadTable::getThreadInfo(int id)
+{
+	return iTable[id];
+}
+
+bool ThreadTable::pause(int id)
+{
+	return true;
+}
+
+bool ThreadTable::resume(int id)
+{
+	return true;
 }

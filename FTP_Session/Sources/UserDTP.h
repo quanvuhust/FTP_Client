@@ -6,6 +6,15 @@
 
 using namespace std;
 
+struct ThreadInfo
+{
+	int id;
+	long totalSize = 0;
+	long byteTransfer = 0;
+	string source;
+	string destination;
+};
+
 struct DownLoadLog{
 	char* fileName;
 	int startOffset;
@@ -26,9 +35,9 @@ public:
 	
 	bool connectServer(void);
 	bool download(string &buffer);
-	bool download(char *path, ThreadInf *inf);
-	bool download(char *path, int startOffset, int size, ThreadInf *inf);
-	bool upload(char *path, ThreadInf *inf);
+	bool download(char *path, ThreadInfo *inf);
+	bool download(char *path, int startOffset, int size, ThreadInfo *inf);
+	bool upload(char *path, ThreadInfo *inf);
 };
 
 #endif

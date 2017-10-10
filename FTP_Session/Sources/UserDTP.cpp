@@ -36,7 +36,7 @@ bool UserDTP::download(string &buffer)
 	return true;
 }
 
-bool UserDTP::download(char *path, ThreadInf *inf)
+bool UserDTP::download(char *path, ThreadInfo *inf)
 {
 	inf->byteTransfer = 0;
 	HANDLE file = CreateFile(path, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, NULL);
@@ -62,7 +62,7 @@ bool UserDTP::download(char *path, ThreadInf *inf)
 }
 
 
-bool UserDTP::download(char *path, int startOffset, int size, ThreadInf *inf)
+bool UserDTP::download(char *path, int startOffset, int size, ThreadInfo *inf)
 {
 	inf->byteTransfer = 0;
 	HANDLE file = CreateFile(path, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, NULL);
@@ -94,7 +94,7 @@ bool UserDTP::download(char *path, int startOffset, int size, ThreadInf *inf)
 	return true;
 }
 
-bool UserDTP::upload(char *path, ThreadInf *inf)
+bool UserDTP::upload(char *path, ThreadInfo *inf)
 {
 	return true;
 }

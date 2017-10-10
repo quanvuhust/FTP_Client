@@ -99,13 +99,9 @@ void FTPSession::changeDirectory(char *newPath) {
 	userPI->receiveResponse(recvbuf);
 
 	recvbuf[3] = '\0';
-	if (strcmp(recvbuf, "250") == 0) {
+	
+	if (strcmp(recvbuf, "550") == 0) {
 		printf("%s\n", &recvbuf[4]);
-		getchar();
-	}
-	else if (strcmp(recvbuf, "550") == 0) {
-		printf("%s\n", &recvbuf[4]);
-		getchar();
 	}
 	delete[] recvbuf;
 	delete[] command;
@@ -117,8 +113,13 @@ void FTPSession::printCurrentDirectory(void) {
 	userPI->sendCommand("PWD");
 	userPI->receiveResponse(recvbuf);
 
-	printf("%s\n", &recvbuf[4]);
-	getchar();
+	for (int i = 6; recvbuf[i] != '\0'; i++) {
+		if (recvbuf[i] == '\"') {
+			recvbuf[i] = '\0';
+			break;
+		}
+	}
+	printf("%s", &recvbuf[5]);
 
 	delete[] recvbuf;
 }
@@ -186,7 +187,7 @@ void FTPSession::establishDataChanel(UserPI *pUserPI, char dataPort[])
 	delete[] recvbuf;
 }
 
-bool FTPSession::download(char *destination, char *source, ThreadInf *inf)
+bool FTPSession::download(char *destination, char *source, ThreadInfo *inf)
 {
 	char dataPort[NUMBER_DIGIT_PORT];
 	UserPI *pUserPI = new UserPI(serverIP);
@@ -219,7 +220,7 @@ bool FTPSession::download(char *destination, char *source, ThreadInf *inf)
 }
 
 
-bool FTPSession::download(char *destination, char *source, int startOffset, int size, ThreadInf *inf)
+bool FTPSession::download(char *destination, char *source, int startOffset, int size, ThreadInfo *inf)
 {
 	char dataPort[NUMBER_DIGIT_PORT];
 	UserPI *pUserPI = new UserPI(serverIP);

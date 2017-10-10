@@ -38,14 +38,17 @@ bool createSession(int ID, SessionTable *sessTable) {
 	string password;
 	string serverIP;
 	cout << "Server IP = ";
-	cin >> serverIP;
+	getline(cin, serverIP);
+
 	cout << "User name (go \"enter\" de dang nhap che do anonymous user): ";
 	getline(cin, username);
 	if (username == "") {
 		username.assign("anonymous");
 	}
+
 	cout << "Password: ";
 	getline(cin, password);
+	
 	string arguments = nameProgram + " " + std::to_string(ID) + " " + serverIP + " " + username + " " + password;
 	char cArguments[1000], cServerIP[100];
 	strcpy_s(cArguments, 1000, arguments.c_str());
@@ -66,6 +69,12 @@ int main(int argc, char** argv) {
 	SessionTable *sessTable = new SessionTable();
 	do {
 		while (1) {
+			for (int i = 0; i < sessTable->getNumberSession(); i++) {
+				if (sessTable->checkTerminatedProcess(i)) {
+					sessTable->closeSession(i);
+				}
+			}
+
 			system("cls");
 			cout << "1. Tao mot phien lam viec voi Server." << endl;
 			cout << "2. Xem danh sach cac phien lam viec." << endl;
@@ -85,6 +94,7 @@ int main(int argc, char** argv) {
 		case 1: {
 			createSession(sessTable->getNumberSession(), sessTable);
 			cout << "Session " << sessTable->getNumberSession() - 1 << " da duoc tao thanh cong." << endl;
+			system("pause");
 			break;
 		}
 		case 2: {
@@ -100,14 +110,16 @@ int main(int argc, char** argv) {
 			}
 
 			string id;
-			cout << "Nhap so id cua phien can dong (all: De dong tat ca phien dang lam viec).";
+			cout << "Nhap so id cua phien can dong (all: De dong tat ca phien dang lam viec): ";
 			cin >> id;
 			if(id == "all") {
 				sessTable->closeAllSession();
 				cout << "Tat ca phien da duoc dong thanh cong." << endl;
+				system("pause");
 			} else {
 				sessTable->closeSession(std::stoi(id));
 				cout << "Phien " << id <<" da dong thanh cong." << endl;
+				system("pause");
 			}
 			break;
 		}
