@@ -24,12 +24,10 @@ UserPI::~UserPI(void)
 {
 	DEBUG_DESTRUCTOR
 	controlSocket.closeConnect();
-	WSACleanup();
+	//WSACleanup();
 }
 
 bool UserPI::createChanel(void) {
-	cout << "Waiting for connecting..." << endl;
-	
 	if(controlSocket.connectServer(serverIP, controlPort)){
 		receiveResponse();
 		return true;

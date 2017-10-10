@@ -1,4 +1,5 @@
-﻿  FTPSessionProgram.cpp
-c:\users\dell\source\repos\ftp_client\ftp_session\sources\ftpsessionprogram.cpp(251): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+﻿  UserPI.cpp
+  FTPSession.cpp
+  Generating Code...
   FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\x64\Debug\FTP_Session.exe
   FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\x64\Debug\FTP_Session.pdb (Partial PDB)

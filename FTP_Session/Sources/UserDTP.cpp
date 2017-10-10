@@ -56,8 +56,6 @@ bool UserDTP::download(char *path, ThreadInfo *inf)
 
 	delete[] recvbuf;
 	CloseHandle(file);
-	cout << sum << endl;
-	getchar();
 	return true;
 }
 

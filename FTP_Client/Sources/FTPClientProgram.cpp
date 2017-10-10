@@ -69,12 +69,14 @@ int main(int argc, char** argv) {
 	SessionTable *sessTable = new SessionTable();
 	do {
 		while (1) {
-			for (int i = 0; i < sessTable->getNumberSession(); i++) {
-				if (sessTable->checkTerminatedProcess(i)) {
-					sessTable->closeSession(i);
+			for (int c = 0; c < 1; c++) {
+				for (int i = 0; i < sessTable->getNumberSession(); i++) {
+					if (sessTable->checkTerminatedProcess(i)) {
+						sessTable->closeSession(i);
+					}
 				}
 			}
-
+			
 			system("cls");
 			cout << "1. Tao mot phien lam viec voi Server." << endl;
 			cout << "2. Xem danh sach cac phien lam viec." << endl;

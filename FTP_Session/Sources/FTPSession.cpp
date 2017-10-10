@@ -63,6 +63,7 @@ void FTPSession::list(void) {
 
 	string buffer;
 	pUserDTP->download(buffer);
+	userPI->receiveResponse();
 	cout << buffer << endl;
 
 	delete pUserDTP;
@@ -213,6 +214,7 @@ bool FTPSession::download(char *destination, char *source, ThreadInfo *inf)
 	delete[] command;
 
 	pUserDTP->download(destination, inf);
+	pUserPI->receiveResponse();
 
 	delete pUserPI;
 	delete pUserDTP;
@@ -252,6 +254,7 @@ bool FTPSession::download(char *destination, char *source, int startOffset, int 
 	delete[] command;
 	
 	pUserDTP->download(destination, startOffset, size, inf);
+	pUserPI->receiveResponse();
 
 	delete pUserPI;
 	delete pUserDTP;

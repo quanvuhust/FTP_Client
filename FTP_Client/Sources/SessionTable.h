@@ -20,8 +20,8 @@ private:
 	vector<PROCESS_INFORMATION> prtable;
 	vector<SessionInfo> inf;
 	int nSession = 0;
-	bool checkTerminatedProcess(int id);
 public:
+	bool checkTerminatedProcess(int id);
 	bool isEmpty(void);
 	bool createSession(char* arguments, char* serverIP);
 	void listSession(void);
