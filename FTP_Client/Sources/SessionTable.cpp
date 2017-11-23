@@ -1,4 +1,5 @@
 #include "SessionTable.h"
+#include <iomanip>
 #include <cstdio>
 #include <psapi.h>
 #include <iostream>
@@ -63,10 +64,13 @@ void SessionTable::listSession(void)
 	}
 
 	cout << "Danh sach cac phien dang hoat dong." << endl;
+	cout << left << setw(5) << "ID";
+	cout << "\t" << setw(17) << "IP";
+	cout << "\t" << "Start time" << endl;
 	for (int i = 0; i < nSession; i++) {
-		cout << i << ". ";
-		cout << "IP: " << inf[i].serverIP;
-		cout << ". Start: " << inf[i].startTime << endl;
+		cout << " " << left << setw(5) << i;
+		cout << setw(17) << inf[i].serverIP;
+		cout << inf[i].startTime << endl;
 	}
 }
 

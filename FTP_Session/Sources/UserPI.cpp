@@ -24,7 +24,6 @@ UserPI::~UserPI(void)
 {
 	DEBUG_DESTRUCTOR
 	controlSocket.closeConnect();
-	//WSACleanup();
 }
 
 bool UserPI::createChanel(void) {

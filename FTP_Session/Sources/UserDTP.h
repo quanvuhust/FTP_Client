@@ -2,25 +2,10 @@
 #define TRANSFER_SESSION_H
 
 #include "UserPI.h"
+#include "HistoryManager.h"
 #include <string>
 
 using namespace std;
-
-struct ThreadInfo
-{
-	int id;
-	long totalSize = 0;
-	long byteTransfer = 0;
-	string source;
-	string destination;
-};
-
-struct DownLoadLog{
-	char* fileName;
-	int startOffset;
-	int size;
-	int completed;
-};
 
 class UserDTP
 {
@@ -35,8 +20,7 @@ public:
 	
 	bool connectServer(void);
 	bool download(string &buffer);
-	bool download(char *path, ThreadInfo *inf);
-	bool download(char *path, int startOffset, int size, ThreadInfo *inf);
+	bool download(char *path, ThreadInfo *inf, HistoryManager *gHisManager);
 	bool upload(char *path, ThreadInfo *inf);
 };
 

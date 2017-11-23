@@ -1,3 +1,4 @@
-﻿  FTPSession.cpp
-  FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Session\FTP_Session\Debug\FTP_Session.exe
-  FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Session\FTP_Session\Debug\FTP_Session.pdb (Partial PDB)
+﻿  Main.cpp
+c:\users\dell\source\repos\ftp_client\ftp_session\sources\main.cpp(315): warning C4018: '<': signed/unsigned mismatch
+  FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Debug\FTP_Session.exe
+  FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Debug\FTP_Session.pdb (Partial PDB)

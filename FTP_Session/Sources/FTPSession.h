@@ -22,13 +22,11 @@ public:
 	void list(void);
 	void changeDirectory(char *newPath);
 	void printCurrentDirectory(void);
-	long getFileSize(char *fileName);
+	long getFileSize(const char *fileName);
 
 	bool creatControlChanel(UserPI *pUserPI);
 	void establishDataChanel(UserPI *pUserPI, char dataPort[]);
 	bool download(char *destination, char *source, ThreadInfo *inf);
-	bool download(char *destination, char *source, int startOffset, int size, ThreadInfo *inf);
-	bool restart(const ThreadInfo inf);
 	bool upload(char *destination, char *source, ThreadInfo *inf);
 };
 

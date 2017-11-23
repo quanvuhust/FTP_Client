@@ -5,6 +5,8 @@
 
 using namespace std;
 
+extern HistoryManager *gHisManager;
+
 FTPSession::FTPSession(char *serverIP,char *username, char* password): serverIP(serverIP), username(username), password(password)
 {
 	userPI = new UserPI(serverIP);
@@ -125,7 +127,7 @@ void FTPSession::printCurrentDirectory(void) {
 	delete[] recvbuf;
 }
 
-long FTPSession::getFileSize(char *fileName) {
+long FTPSession::getFileSize(const char *fileName) {
 	char *recvbuf = new char[DEFAULT_BUFLEN];
 	int lenCmd = 6 + (int)strlen(fileName);
 	char *command = new char[lenCmd];
@@ -196,67 +198,40 @@ bool FTPSession::download(char *destination, char *source, ThreadInfo *inf)
 	if(!creatControlChanel(pUserPI)){
 		return false;
 	}
-	
-	//setTransferMode(pUserPI, BINARY);
+
 	establishDataChanel(pUserPI, dataPort);
 	UserDTP *pUserDTP = new UserDTP(serverIP, dataPort);
 	pUserDTP->connectServer();
 	
+	
 	int lenCmd = 6 + (int)strlen(source);
 	char *command = new char[lenCmd];
 
-	strcpy_s(command, lenCmd, "RETR ");
-	strcat_s(command, lenCmd, source);
+	if (inf->start > 0) {
+		strcpy_s(command, lenCmd, "REST ");
+		snprintf(&command[5], lenCmd, "%lld", inf->start);
 
-	pUserPI->sendCommand(command);
-	pUserPI->receiveResponse();
-
-	delete[] command;
-
-	pUserDTP->download(destination, inf);
-	pUserPI->receiveResponse();
-
-	delete pUserPI;
-	delete pUserDTP;
-	return true;
-}
-
-
-bool FTPSession::download(char *destination, char *source, int startOffset, int size, ThreadInfo *inf)
-{
-	char dataPort[NUMBER_DIGIT_PORT];
-	UserPI *pUserPI = new UserPI(serverIP);
-
-	if(!creatControlChanel(pUserPI)){
-		return false;
+		pUserPI->sendCommand(command);
+		pUserPI->receiveResponse();
 	}
 
-	establishDataChanel(pUserPI, dataPort);
-	UserDTP *pUserDTP = new UserDTP(serverIP, dataPort);
-	pUserDTP->connectServer();
-	
-	
-	int lenCmd = 6 + (int)strlen(source);
-	char *command = new char[lenCmd];
-
-	strcpy_s(command, lenCmd, "REST ");
-	snprintf(&command[5], lenCmd, "%d", startOffset);
-
-	pUserPI->sendCommand(command);
-	pUserPI->receiveResponse();
-
 	strcpy_s(command, lenCmd, "RETR ");
 	strcat_s(command, lenCmd, source);
 
 	pUserPI->sendCommand(command);
 	pUserPI->receiveResponse();
 
-	delete[] command;
 	
-	pUserDTP->download(destination, startOffset, size, inf);
-	pUserPI->receiveResponse();
+	if (pUserDTP->download(destination, inf, gHisManager) == true) {
+		pUserPI->receiveResponse();
+	}
+	else {
+		pUserPI->sendCommand("QUIT");
+	}
 
+	delete[] command;
 	delete pUserPI;
 	delete pUserDTP;
 	return true;
 }
+

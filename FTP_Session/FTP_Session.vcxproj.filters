@@ -27,7 +27,13 @@
     <ClCompile Include="Sources\UserPI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\FTPSessionProgram.cpp">
+    <ClCompile Include="Sources\ThreadTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\HistoryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +50,10 @@
     <ClInclude Include="Sources\UserPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\FTPSessionProgram.h">
+    <ClInclude Include="Sources\ThreadTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\HistoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

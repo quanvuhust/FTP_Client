@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{B680AE51-DCEE-4B1C-AD68-64D10C02628F}</ProjectGuid>
+    <ProjectGuid>{06665DC3-FDC1-4743-A216-DE1F08F5A8AC}</ProjectGuid>
     <RootNamespace>FTP_Session</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -113,14 +113,17 @@
   <ItemGroup>
     <ClCompile Include="Sources\ClientSocket.cpp" />
     <ClCompile Include="Sources\FTPSession.cpp" />
-    <ClCompile Include="Sources\FTPSessionProgram.cpp" />
+    <ClCompile Include="Sources\HistoryManager.cpp" />
+    <ClCompile Include="Sources\Main.cpp" />
+    <ClCompile Include="Sources\ThreadTable.cpp" />
     <ClCompile Include="Sources\UserDTP.cpp" />
     <ClCompile Include="Sources\UserPI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\ClientSocket.h" />
     <ClInclude Include="Sources\FTPSession.h" />
-    <ClInclude Include="Sources\FTPSessionProgram.h" />
+    <ClInclude Include="Sources\HistoryManager.h" />
+    <ClInclude Include="Sources\ThreadTable.h" />
     <ClInclude Include="Sources\UserDTP.h" />
     <ClInclude Include="Sources\UserPI.h" />
   </ItemGroup>
