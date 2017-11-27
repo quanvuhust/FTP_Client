@@ -10,7 +10,7 @@ ThreadTable::ThreadTable()
 
 }
 
-bool ThreadTable::addThreadInfo(ThreadInfo inf)
+bool ThreadTable::addThreadInfo(ThreadInfo *inf)
 {
 	iTable.push_back(inf);
 	return true;
@@ -48,13 +48,13 @@ bool ThreadTable::checkTerminatedThread(int id)
 	return true;
 }
 
-void ThreadTable::print(vector<bool> &checkStopCondition)
+void ThreadTable::print(vector<bool *> &checkStopCondition)
 {
 	int n = hTable.size();
 	int c = n;
 
 	for (int i = 0; i < n; i++) {
-		if (checkStopCondition[i] == true) {
+		if (*checkStopCondition[i] == true) {
 			c--;
 		}
 	}
@@ -64,9 +64,9 @@ void ThreadTable::print(vector<bool> &checkStopCondition)
 	}
 
 	for (int i = 0; i < n; i++) {
-		if (checkStopCondition[i] == false) {
+		if (*checkStopCondition[i] == false) {
 			cout << setw(7) << left << i;
-			cout << iTable[i].destination << endl;
+			cout << iTable[i]->destination << endl;
 		}
 	}
 }
@@ -81,7 +81,7 @@ HANDLE ThreadTable::getHandle(int id)
 	return hTable[id];
 }
 
-ThreadInfo& ThreadTable::getThreadInfo(int id)
+ThreadInfo* ThreadTable::getThreadInfo(int id)
 {
 	return iTable[id];
 }

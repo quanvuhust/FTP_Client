@@ -14,20 +14,20 @@ class ThreadTable
 {
 private:
 	vector<HANDLE> hTable;
-	vector<ThreadInfo> iTable;
+	vector<ThreadInfo *> iTable;
 public:
 	ThreadTable();
-	bool addThreadInfo(ThreadInfo inf);
+	bool addThreadInfo(ThreadInfo *inf);
 	bool addThread(HANDLE h);
 	bool remove(int id);
 	bool removeAll(void);
 	bool checkTerminatedThread(int id);
-	void print(vector<bool> &checkStopCondition);
+	void print(vector<bool *> &checkStopCondition);
 	int getSize(void);
 	HANDLE getHandle(int id);
 	bool pause(int id);
 	bool resume(int id);
-	ThreadInfo& getThreadInfo(int id);
+	ThreadInfo* getThreadInfo(int id);
 };
 
 #endif

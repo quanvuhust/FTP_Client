@@ -40,6 +40,7 @@ bool UserDTP::download(string &buffer)
 
 bool UserDTP::download(char *path, ThreadInfo *inf, HistoryManager *gHisManager)
 {
+	bool *pCheckStop = inf->pCheckStop;
 	long long start = inf->start;
 	long long offset = inf->offset;
 	HANDLE file = CreateFile(path, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, 0, NULL);
@@ -48,11 +49,12 @@ bool UserDTP::download(char *path, ThreadInfo *inf, HistoryManager *gHisManager)
 	long long iResult = 1;
 	long long sum = 0;
 	char *recvbuf = new char[BLOCK_SIZE + 1];
+	
 
 	int nBlock = offset / BLOCK_SIZE;
 
 	for (int i = 0; i < nBlock; i++) {
-		if (*(inf->itCheckStop) == true) {
+		if (*pCheckStop == true) {
 			break;
 		}
 
@@ -61,7 +63,7 @@ bool UserDTP::download(char *path, ThreadInfo *inf, HistoryManager *gHisManager)
 		WriteFile(file, recvbuf, iResult, NULL, NULL);
 	}
 
-	if (*(inf->itCheckStop) == false) {
+	if (*pCheckStop == false) {
 		while(iResult > 0) {
 			iResult = dataSocket.receive(recvbuf, BLOCK_SIZE);
 			sum += iResult;
@@ -88,10 +90,10 @@ bool UserDTP::download(char *path, ThreadInfo *inf, HistoryManager *gHisManager)
 	delete[] recvbuf;
 	CloseHandle(file);
 
-	if (*(inf->itCheckStop) == true) {
+	if (*pCheckStop == true) {
 		return false;
 	}
-	*(inf->itCheckStop) = true;
+	*pCheckStop = true;
 	return true;
 }
 

@@ -8,7 +8,7 @@ using namespace std;
 
 struct ThreadInfo
 {
-	vector<bool>::iterator itCheckStop;
+	bool *pCheckStop;
 	int id;
 	long long start = 0;
 	long long offset = 0;

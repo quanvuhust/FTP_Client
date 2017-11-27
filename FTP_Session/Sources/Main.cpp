@@ -123,7 +123,7 @@ void threadDownload(ThreadInfo *inf)
 	strcpy_s(destination, lenDes + 1, inf->destination.c_str());
 	char *source = new char[lenSour + 1];
 	strcpy_s(source, lenSour + 1, inf->source.c_str());
-
+	
 	gSession->download(destination, source, inf);
 	
 	delete[] destination;
@@ -157,23 +157,23 @@ void size(int argc, char* fileName) {
 	}
 }
 
-void download(int argc, ThreadTable *thrTable, char* source, char* destination, vector<bool>::iterator itCheckStop) 
+void download(int argc, ThreadTable *thrTable, char* source, char* destination, bool *pCheckStop) 
 {
 	if (argc == 3) {
 		DWORD threadId;
 		int id = thrTable->getSize();
 
-		ThreadInfo inf;
-		inf.start = 0;
-		inf.itCheckStop = itCheckStop;
-		inf.id = id;
-		inf.totalSize = gSession->getFileSize(source);
-		inf.offset = inf.totalSize;
-		inf.source.assign(source);
-		inf.destination.assign(destination);
+		ThreadInfo *inf = new ThreadInfo();
+		inf->start = 0;
+		inf->pCheckStop = pCheckStop;
+		inf->id = id;
+		inf->totalSize = gSession->getFileSize(source);
+		inf->offset = inf->totalSize;
+		inf->source.assign(source);
+		inf->destination.assign(destination);
 
 		thrTable->addThreadInfo(inf);
-		thrTable->addThread(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadDownload, &thrTable->getThreadInfo(id), 0, &threadId));
+		thrTable->addThread(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadDownload, thrTable->getThreadInfo(id), 0, &threadId));
 	}
 	else {
 		cout << "Invalid arguments." << endl;
@@ -199,17 +199,17 @@ void resume(int argc, ThreadTable *thrTable, int id) {
 	}
 }
 
-void stop(int argc, vector<bool>::iterator itCheckStop) 
+void stop(int argc, bool *pCheckStop) 
 {
 	if (argc == 2) {
-		*itCheckStop = true;
+		*pCheckStop = true;
 	}
 	else {
 		cout << "Invalid arguments." << endl;
 	}
 }
 
-void listDownload(int argc, ThreadTable *thrTable, vector<bool> &checkStopCondition)
+void listDownload(int argc, ThreadTable *thrTable, vector<bool *> &checkStopCondition)
 {
 	if (argc == 1) {
 		thrTable->print(checkStopCondition);
@@ -219,33 +219,33 @@ void listDownload(int argc, ThreadTable *thrTable, vector<bool> &checkStopCondit
 	}
 }
 
-bool restart(int id, ThreadTable *thrTable, vector<bool>::iterator itCheckStop) {
+bool restart(int id, ThreadTable *thrTable, bool *pCheckStop) {
 	DWORD threadId;
 
 	WaitForSingleObject(gMutex, INFINITE);
 	HistoryRecord record = gHisManager->getRecord(id);
 	ReleaseMutex(gMutex);
 	
-	ThreadInfo inf;
-	inf.start = record.start + record.transByte;
-	inf.offset = record.totalSize - inf.start;
-	inf.itCheckStop = itCheckStop;
-	inf.id = id;
-	inf.totalSize = gSession->getFileSize(record.source.c_str());
-	inf.source = record.source;
-	inf.destination = record.destination;
+	ThreadInfo *inf = new ThreadInfo();
+	inf->start = record.start + record.transByte;
+	inf->offset = record.totalSize - inf->start;
+	inf->pCheckStop = pCheckStop;
+	inf->id = id;
+	inf->totalSize = gSession->getFileSize(record.source.c_str());
+	inf->source = record.source;
+	inf->destination = record.destination;
 
 	WaitForSingleObject(gMutex, INFINITE);
 	gHisManager->remove(id);
 	ReleaseMutex(gMutex);
 
 	thrTable->addThreadInfo(inf);
-	thrTable->addThread(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadDownload, &thrTable->getThreadInfo(id), 0, &threadId));
+	thrTable->addThread(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadDownload, thrTable->getThreadInfo(id), 0, &threadId));
 
 	return true;
 }
 
-void history(int argc, char* argv[], ThreadTable *thrTable, vector<bool> &checkStopCondition) {
+void history(int argc, char* argv[], ThreadTable *thrTable, vector<bool *> &checkStopCondition) {
 	if (argc < 2) {
 		cout << "Invalid arguments." << endl;
 	}
@@ -260,8 +260,8 @@ void history(int argc, char* argv[], ThreadTable *thrTable, vector<bool> &checkS
 	else if (argc == 3) {
 		if (strcmp(argv[1], "restart") == 0) {
 			int id = atoi(argv[2]);
-			checkStopCondition.push_back(false);
-			restart(id, thrTable, checkStopCondition.begin() + checkStopCondition.size() - 1);
+			checkStopCondition.push_back(new bool(false));
+			restart(id, thrTable, checkStopCondition[checkStopCondition.size() - 1]);
 		}
 		else if (strcmp(argv[1], "rm") == 0) {
 			if (strcmp(argv[2], "all") == 0) {
@@ -304,14 +304,14 @@ int main(int argc, char **argv)
 	gHisManager = new HistoryManager(ipServer);
 
 	ThreadTable *thrTable = new ThreadTable();
-	vector<bool> checkStopCondition;
+	vector<bool *> checkStopCondition;
 	
 	system("cls");
 	while (1)
 	{
 		gSession->printCurrentDirectory();
 		cout << ">";
-
+		
 		cin.sync();
 		cin.getline(input, MAX_PATH + 2, '\n');
 		if (input[0] == '\0') {
@@ -335,8 +335,8 @@ int main(int argc, char **argv)
 			listDownload(argc, thrTable, checkStopCondition);
 		}
 		else if (strcmp(argv[0], "download") == 0) {
-			checkStopCondition.push_back(false);
-			download(argc, thrTable, argv[1], argv[2], checkStopCondition.begin() + checkStopCondition.size() - 1);
+			checkStopCondition.push_back(new bool(false));
+			download(argc, thrTable, argv[1], argv[2], checkStopCondition[checkStopCondition.size() - 1]);
 		}
 		else if (strcmp(argv[0], "pause") == 0) {
 			pause(argc, thrTable, atoi(argv[1]));
@@ -346,7 +346,7 @@ int main(int argc, char **argv)
 		}
 		else if (strcmp(argv[0], "stop") == 0) {
 			int id = atoi(argv[1]);
-			stop(argc, checkStopCondition.begin() + id);
+			stop(argc, checkStopCondition[id]);
 			WaitForSingleObject(thrTable->getHandle(id), INFINITE);
 			thrTable->remove(id);
 			checkStopCondition.erase(checkStopCondition.begin() + id);
@@ -390,7 +390,7 @@ int main(int argc, char **argv)
 	}
 	
 	delete gSession;
-	//delete gHisManager;
+	delete gHisManager;
 	fclose(log);
 	return 0;
 }

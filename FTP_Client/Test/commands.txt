@@ -1,4 +1,5 @@
 download \SandboxieInstall.exe C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\SandboxieInstall.exe
 download \ubuntu-17.04-desktop-amd64.iso C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\ubuntu-17.04-desktop-amd64.iso
-download \jdk-8u144-docs-all.zip C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\jdk-8u144-docs-all.zip
+
 download \systemrescuecd-x86-5.0.4.iso C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\systemrescuecd-x86-5.0.4.iso
+download \jdk-8u144-docs-all.zip C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\jdk-8u144-docs-all.zip

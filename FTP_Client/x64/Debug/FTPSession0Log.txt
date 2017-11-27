@@ -1,0 +1,37 @@
+-> Line 8 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\clientsocket.cpp: 
+Constructor.
+Connecting to  localhost: 21
+-> Line 54 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 220-FileZilla Server 0.9.60 beta
+220-written by Tim Kosse (tim.kosse@filezilla-project.org)
+220 Please visit https://filezilla-project.org/
+
+-> Line 40 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\ftpsession.cpp: 
+YES
+-> Line 54 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 331 Password required for quan
+
+-> Line 54 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 230 Logged on
+
+-> Line 46 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+257 "/" is current directory.
+
+-> Line 46 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+227 Entering Passive Mode (14,162,87,143,242,100)
+
+-> Line 8 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\clientsocket.cpp: 
+Constructor.
+Connecting to  localhost: 62052
+-> Line 54 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 200 Type set to I
+
+-> Line 54 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 150 Opening data channel for directory listing of "/"
+
+-> Line 54 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+Server response: 226 Successfully transferred "/"
+
+-> Line 46 in file c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp: 
+257 "/" is current directory.
+
