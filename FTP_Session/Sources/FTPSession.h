@@ -27,7 +27,7 @@ public:
 	bool creatControlChanel(UserPI *pUserPI);
 	void establishDataChanel(UserPI *pUserPI, char dataPort[]);
 	bool download(char *destination, char *source, ThreadInfo *inf);
-	bool upload(char *destination, char *source, ThreadInfo *inf);
+	bool upload(char *destination, char *source);
 };
 
 #endif

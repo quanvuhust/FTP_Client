@@ -25,7 +25,8 @@ public:
 	ClientSocket(void);
 	~ClientSocket(void);
 	bool connectServer(char* serverIP, char* port, int addressFamily = AF_INET, int socketType = SOCK_STREAM, int protocol = IPPROTO_TCP);
-	void sendMess(char* sendbuf);
+	int sendMess(char* sendbuf);
+	int sendData(char *sendbuf);
 	int receive(char *recvbuf, int lenRecvbuf  = DEFAULT_BUFLEN);
 	void closeConnect(void);
 };

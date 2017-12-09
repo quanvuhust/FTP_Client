@@ -78,14 +78,29 @@ bool ClientSocket::connectServer(char* serverIP, char* port, int addressFamily, 
 	return true;
 }
 
-void ClientSocket::sendMess(char* sendbuf)
+int ClientSocket::sendMess(char* sendbuf)
 {
 	int result = send(clientSocket, sendbuf, (int)strlen(sendbuf) + 1, 0);
 
 	if (result == SOCKET_ERROR) {
 		clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "send failed with error: " << WSAGetLastError() << endl;
+	}
+
+	return result;
+}
+
+int ClientSocket::sendData(char *sendbuf) {
+	int iResult;
+
+	iResult = send(clientSocket, sendbuf, 1, 0);
+
+	if (iResult < 0)
+	{
+		clog << "-> Line " << __LINE__ << " in file " << __FILE__ << ": " << endl << "send failed with error: " << WSAGetLastError() << endl;
 		//closeProgram();
 	}
+
+	return iResult;
 }
 
 int ClientSocket::receive(char *recvbuf, int lenRecvbuf)

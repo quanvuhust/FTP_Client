@@ -180,6 +180,18 @@ void download(int argc, ThreadTable *thrTable, char* source, char* destination, 
 	}
 }
 
+void upload(int argc, char* destination, char* source) {
+	if (argc == 3) {
+		gSession->upload(destination, source);
+		delete[] destination;
+		delete[] source;
+	}
+	else {
+		cout << "Invalid arguments." << endl;
+	}
+
+}
+
 void pause(int argc, ThreadTable *thrTable, int id) 
 {
 	if (argc == 2) {
@@ -337,6 +349,9 @@ int main(int argc, char **argv)
 		else if (strcmp(argv[0], "download") == 0) {
 			checkStopCondition.push_back(new bool(false));
 			download(argc, thrTable, argv[1], argv[2], checkStopCondition[checkStopCondition.size() - 1]);
+		}
+		else if (strcmp(argv[0], "upload") == 0) {
+			upload(argc, argv[1], argv[2]);
 		}
 		else if (strcmp(argv[0], "pause") == 0) {
 			pause(argc, thrTable, atoi(argv[1]));

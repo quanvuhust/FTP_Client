@@ -37,7 +37,14 @@ bool UserPI::createChanel(void) {
 
 void UserPI::sendCommand(char* command)
 {
-	controlSocket.sendMess(command);
+	int lenBuf = strlen(command) + 3;
+	char *buffer = new char[lenBuf];
+	strcpy_s(buffer, lenBuf, command);
+	strcat_s(buffer, lenBuf, "\n");
+
+	controlSocket.sendMess(buffer);
+
+	delete[] buffer;
 }
 
 int UserPI::receiveResponse(char* recvbuf)

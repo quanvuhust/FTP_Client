@@ -21,7 +21,7 @@ public:
 	bool connectServer(void);
 	bool download(string &buffer);
 	bool download(char *path, ThreadInfo *inf, HistoryManager *gHisManager);
-	bool upload(char *path, ThreadInfo *inf);
+	bool upload(char *path);
 };
 
 #endif

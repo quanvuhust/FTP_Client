@@ -1,7 +1,4 @@
-﻿  UserDTP.cpp
-c:\users\dell\source\repos\ftp_client\ftp_session\sources\userdtp.cpp(47): warning C4244: 'argument': conversion from '__int64' to 'LONG', possible loss of data
-c:\users\dell\source\repos\ftp_client\ftp_session\sources\userdtp.cpp(54): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-c:\users\dell\source\repos\ftp_client\ftp_session\sources\userdtp.cpp(63): warning C4244: 'argument': conversion from '__int64' to 'DWORD', possible loss of data
-c:\users\dell\source\repos\ftp_client\ftp_session\sources\userdtp.cpp(70): warning C4244: 'argument': conversion from '__int64' to 'DWORD', possible loss of data
+﻿  UserPI.cpp
+c:\users\dell\source\repos\ftp_client\ftp_session\sources\userpi.cpp(40): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\x64\Debug\FTP_Session.exe
   FTP_Session.vcxproj -> C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\x64\Debug\FTP_Session.pdb (Partial PDB)

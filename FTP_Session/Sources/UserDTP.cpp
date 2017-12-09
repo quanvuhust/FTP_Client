@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
+#include <fstream>
 
 using namespace std;
 
@@ -97,7 +98,25 @@ bool UserDTP::download(char *path, ThreadInfo *inf, HistoryManager *gHisManager)
 	return true;
 }
 
-bool UserDTP::upload(char *path, ThreadInfo *inf)
+bool UserDTP::upload(char *path)
 {
+	int iResult = 1;
+	long sum = 0;
+	ifstream input;
+	input.open(path, ios::in | ios::binary);
+	while (!input.eof()) {
+		char s;
+		if (input.read(&s, sizeof(s))) {
+			iResult = dataSocket.sendData(&s);
+			if (iResult == SOCKET_ERROR) {
+				return false;
+			}
+			sum++;
+		}
+
+	}
+	input.close();
+	printf("Bytes Sent: %ld\n", sum);
+
 	return true;
 }

@@ -235,3 +235,36 @@ bool FTPSession::download(char *destination, char *source, ThreadInfo *inf)
 	return true;
 }
 
+bool FTPSession::upload(char *destination, char *source) {
+	char dataPort[NUMBER_DIGIT_PORT];
+	UserPI *pUserPI = new UserPI(serverIP);
+
+	if (!creatControlChanel(pUserPI)) {
+		return false;
+	}
+
+	establishDataChanel(pUserPI, dataPort);
+	UserDTP *pUserDTP = new UserDTP(serverIP, dataPort);
+	pUserDTP->connectServer();
+
+
+	int lenCmd = 6 + (int)strlen(destination);
+	char *command = new char[lenCmd];
+
+	strcpy_s(command, lenCmd, "STOR ");
+	strcat_s(command, lenCmd, destination);
+
+	pUserPI->sendCommand(command);
+	pUserPI->receiveResponse();
+
+
+	pUserDTP->upload(source);
+	delete pUserDTP;
+
+	pUserPI->receiveResponse();
+
+	delete[] command;
+	delete pUserPI;
+
+	return true;
+}

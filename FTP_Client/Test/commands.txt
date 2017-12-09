@@ -1,5 +1,6 @@
-download \SandboxieInstall.exe C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\SandboxieInstall.exe
-download \ubuntu-17.04-desktop-amd64.iso C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\ubuntu-17.04-desktop-amd64.iso
-
-download \systemrescuecd-x86-5.0.4.iso C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\systemrescuecd-x86-5.0.4.iso
-download \jdk-8u144-docs-all.zip C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\jdk-8u144-docs-all.zip
+download \SandboxieInstall.exe C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\Download\SandboxieInstall.exe
+download \ubuntu-17.04-desktop-amd64.iso C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\Download\ubuntu-17.04-desktop-amd64.iso
+download \systemrescuecd-x86-5.0.4.iso C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\Download\systemrescuecd-x86-5.0.4.iso
+download \jdk-8u144-docs-all.zip C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\Download\jdk-8u144-docs-all.zip
+upload \TestUpload\Cuckoo-2.0.3.tar.gz C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\Upload\Cuckoo-2.0.3.tar.gz
+download \LargeFile.tar C:\Users\Dell\Source\Repos\FTP_Client\FTP_Client\Test\Download\LargeFile.tar
